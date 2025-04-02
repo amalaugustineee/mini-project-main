@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Donate to {{ charity.name }} - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Donate to {{ charity.name }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Your Balance:</h5>
+                        <span class="badge bg-success fs-5">{{ current_user.simulated_token_balance }} SIM Tokens</span>
+                    </div>
+                </div>
+                
+                <form method="POST" action="{{ url_for('charity.donate', charity_id=charity.id) }}" onsubmit="return validateDonationForm();">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Donation Amount (SIM Tokens)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="0.01" max="{{ current_user.simulated_token_balance }}" class="form-control" id="amount" name="amount" required>
+                            <span class="input-group-text">SIM</span>
+                        </div>
+                        <div class="form-text">Enter the amount you wish to donate. Maximum: {{ current_user.simulated_token_balance }} SIM Tokens</div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">About Blockchain Donations</h5>
+                        <p><i class="bi bi-info-circle"></i> Your donation will be permanently recorded on our simulated blockchain, creating a transparent record of all funds received by the charity.</p>
+                        <p><i class="bi bi-eye"></i> You can track how this charity spends the donated funds through the charity detail page and blockchain explorer.</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Confirm Donation</button>
+                        <a href="{{ url_for('charity.charity_detail', charity_id=charity.id) }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <small class="text-muted">Charity Blockchain Address: <code>{{ charity.blockchain_address }}</code></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5 mb-0">Admin Dashboard</h1>
+            <p class="text-muted">Manage charities and monitor blockchain transactions</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('admin.create_charity') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Create New Charity
+            </a>
+        </div>
+    </div>
+
+    {% if pending_charities %}
+    <div class="alert alert-primary d-flex align-items-center mb-4" role="alert">
+        <i class="bi bi-bell-fill me-2 fs-4"></i>
+        <div>
+            <strong>Attention:</strong> You have {{ pending_charities|length }} pending charit{{ 'y' if pending_charities|length == 1 else 'ies' }} awaiting your review.
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Pending Charities</h6>
+                            <h2 class="mt-2 mb-0">{{ pending_charities|length }}</h2>
+                            <small>Awaiting review</small>
+                        </div>
+                        <i class="bi bi-hourglass-split display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Approved Charities</h6>
+                            <h2 class="mt-2 mb-0">{{ approved_charities|length }}</h2>
+                            <small>Active on platform</small>
+                        </div>
+                        <i class="bi bi-check-circle display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Blockchain Status</h6>
+                            <h2 class="mt-2 mb-0">Active</h2>
+                            <small>All systems operational</small>
+                        </div>
+                        <i class="bi bi-diagram-3 display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Charities -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Pending Charities</h5>
+                <span class="badge bg-primary">{{ pending_charities|length }}</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if pending_charities %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for charity in pending_charities %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-building text-primary me-2"></i>
+                                            {{ charity.name }}
+                                        </div>
+                                    </td>
+                                    <td>{{ charity.email }}</td>
+                                    <td>{{ charity.created_at.strftime('%B %d, %Y') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.review_charity', charity_id=charity.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye me-1"></i>Review
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-check-circle text-success display-4"></i>
+                    <p class="mt-3 text-muted">No pending charities to review.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Approved Charities -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Approved Charities</h5>
+                <span class="badge bg-success">{{ approved_charities|length }}</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if approved_charities %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Total Received</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for charity in approved_charities %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-building text-success me-2"></i>
+                                            {{ charity.name }}
+                                        </div>
+                                    </td>
+                                    <td>{{ charity.email }}</td>
+                                    <td>
+                                        <span class="badge bg-success">{{ charity.total_received }} SIM</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">Active</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-building text-muted display-4"></i>
+                    <p class="mt-3 text-muted">No approved charities yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Charity Chain</h1>
+    <p class="lead">A transparent blockchain-based charity donation platform.</p>
+    <hr class="my-4">
+    <p>Donate simulated tokens to charities and track how they spend their funds with full transparency.</p>
+    {% if not current_user.is_authenticated %}
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Get Started</a>
+        <a class="btn btn-outline-primary btn-lg" href="{{ url_for('blockchain.blockchain_explorer') }}" role="button">View Blockchain</a>
+    </p>
+    {% else %}
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('charity.charities_list') }}" role="button">Donate Now</a>
+        <a class="btn btn-outline-primary btn-lg" href="{{ url_for('blockchain.blockchain_explorer') }}" role="button">View Blockchain</a>
+    </p>
+    {% endif %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>How It Works</h4>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Register for an account to receive simulated tokens</li>
+                    <li>Browse through our approved charities</li>
+                    <li>Donate your tokens to charities of your choice</li>
+                    <li>Track how charities spend their funds on the blockchain</li>
+                    <li>All transactions are permanently recorded for transparency</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4>Featured Charities</h4>
+            </div>
+            <div class="card-body p-0">
+                {% if charities %}
+                    <div class="list-group list-group-flush">
+                        {% for charity in charities[:4] %}
+                            <a href="{{ url_for('charity.charity_detail', charity_id=charity.id) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ charity.name }}</h5>
+                                    <span class="badge bg-success rounded-pill">{{ charity.total_received }} SIM</span>
+                                </div>
+                                <p class="mb-1">{{ charity.description|truncate(100) }}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <small class="text-muted">Address: {{ charity.blockchain_address|truncate(15) }}</small>
+                                    {% if current_user.is_authenticated %}
+                                        <a href="{{ url_for('charity.donate', charity_id=charity.id) }}" class="btn btn-sm btn-outline-success">Donate</a>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ url_for('charity.charities_list') }}" class="btn btn-outline-primary">View All Charities</a>
+                    </div>
+                {% else %}
+                    <div class="list-group-item">
+                        <p>No approved charities yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h4>Blockchain Transparency</h4>
+                <p>Every donation and spending transaction is recorded on our simulated blockchain, providing complete transparency on how charitable funds are used. You can view the full blockchain ledger to track the movement of all donations.</p>
+                <a href="{{ url_for('blockchain.blockchain_explorer') }}" class="btn btn-info">Explore the Blockchain</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

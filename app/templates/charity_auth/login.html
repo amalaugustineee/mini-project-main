@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Charity Login - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0"><i class="bi bi-building me-2"></i> Charity Login</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i> This login is exclusively for approved charities to manage their funds and record expenditures.
+                </div>
+                
+                <div class="alert alert-light border">
+                    <p><strong>New to Charity Chain?</strong></p>
+                    <p>If you've just registered, please note that your charity account requires admin approval before you can log in. This helps us ensure the legitimacy of all charities on our platform.</p>
+                    <p class="mb-0">Don't have an account yet? <a href="{{ url_for('charity_auth.register') }}" class="fw-bold">Register your charity</a></p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('charity_auth.login') }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Charity Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Login as Charity
+                        </button>
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i> Back to Home
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <p class="mb-0">Are you a donor? <a href="{{ url_for('auth.login') }}">Login here</a> instead.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

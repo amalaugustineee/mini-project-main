@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}{{ charity.name }} Dashboard - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5">{{ charity.name }} <small class="text-muted fs-5">Dashboard</small></h1>
+            <p class="lead">Manage your charity funds and record expenditures transparently.</p>
+        </div>
+        <div class="col-md-4 text-end align-self-center">
+            <a href="{{ url_for('charity_auth.spend_funds') }}" class="btn btn-success btn-lg">
+                <i class="bi bi-cash-coin me-2"></i> Record New Expenditure
+            </a>
+            <a href="{{ url_for('charity_auth.logout') }}" class="btn btn-outline-secondary ms-2">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Financial Overview -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-wallet2 me-2"></i> Total Donations</h5>
+                    <p class="display-4">{{ total_donations }} SIM</p>
+                    <p>From {{ donations|length }} donor(s)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-piggy-bank me-2"></i> Current Balance</h5>
+                    <p class="display-4">{{ current_balance }} SIM</p>
+                    <p>Available to spend</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-cash-stack me-2"></i> Total Spent</h5>
+                    <p class="display-4">{{ total_spent }} SIM</p>
+                    <p>Across {{ spending_transactions|length }} transactions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spending History -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-receipt me-2"></i> Your Spending History</h4>
+                </div>
+                <div class="card-body">
+                    {% if spending_transactions %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Purpose/Recipient</th>
+                                        <th>Amount</th>
+                                        <th>Transaction ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tx in spending_transactions %}
+                                        <tr>
+                                            <td>{{ tx.timestamp|datetime }}</td>
+                                            <td>{{ tx.recipient_id }}</td>
+                                            <td><span class="badge bg-warning text-dark">{{ tx.amount }} SIM</span></td>
+                                            <td><code>{{ tx.id|truncate(10) }}</code></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-hourglass display-4 text-muted"></i>
+                            <p class="mt-3">No spending transactions recorded yet.</p>
+                            <a href="{{ url_for('charity_auth.spend_funds') }}" class="btn btn-primary">
+                                Record Your First Expenditure
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donor List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-people me-2"></i> Your Donors</h4>
+                </div>
+                <div class="card-body">
+                    {% if donations %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Donor</th>
+                                        <th>Amount</th>
+                                        <th>Transaction ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for donation in donations %}
+                                        <tr>
+                                            <td>{{ donation.timestamp|datetime }}</td>
+                                            <td>{{ donation.donor_name }}</td>
+                                            <td><span class="badge bg-primary">{{ donation.amount }} SIM</span></td>
+                                            <td><code>{{ donation.transaction_id|truncate(10) }}</code></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-emoji-smile display-4 text-muted"></i>
+                            <p class="mt-3">No donations received yet. When donors contribute to your charity, they'll appear here.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

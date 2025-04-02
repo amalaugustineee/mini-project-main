@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Review Charity - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5 mb-0">Review Charity</h1>
+            <p class="text-muted">Review and approve or reject charity registration</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Charity Information -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Charity Information</h5>
+                        <span class="badge bg-warning">Pending Review</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Name</label>
+                                <p class="mb-0">{{ charity.name }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Email</label>
+                                <p class="mb-0">{{ charity.email }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Registration Date</label>
+                                <p class="mb-0">{{ charity.created_at.strftime('%B %d, %Y') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Blockchain Address</label>
+                                <p class="mb-0 text-truncate">{{ charity.blockchain_address }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Status</label>
+                                <p class="mb-0">
+                                    <span class="badge bg-warning">Pending Approval</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Description</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ charity.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Review Actions -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Review Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <form method="POST" action="{{ url_for('admin.approve_charity', charity_id=charity.id) }}" class="d-grid">
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to approve this charity?')">
+                                <i class="bi bi-check-circle me-2"></i>Approve Charity
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.reject_charity', charity_id=charity.id) }}" class="d-grid">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this charity? This action cannot be undone.')">
+                                <i class="bi bi-x-circle me-2"></i>Reject Charity
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blockchain Info -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Blockchain Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Address</label>
+                        <p class="mb-0 text-truncate">{{ charity.blockchain_address }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Balance</label>
+                        <p class="mb-0">
+                            <span class="badge bg-primary">0 SIM</span>
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Transactions</label>
+                        <p class="mb-0">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

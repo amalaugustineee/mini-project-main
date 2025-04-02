@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Blockchain Explorer - Charity Chain{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Blockchain Explorer</h1>
+<p class="lead">Transparency is our core value. All donations and spending transactions are permanently recorded on our simulated blockchain.</p>
+
+<div class="accordion" id="blockchainAccordion">
+    {% for block in blocks %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ block.index }}">
+                <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ block.index }}" aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ block.index }}">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <span>Block #{{ block.index }}</span>
+                        <small class="text-muted">{{ block.timestamp|datetime }}</small>
+                    </div>
+                </button>
+            </h2>
+            <div id="collapse{{ block.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ block.index }}" data-bs-parent="#blockchainAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Hash:</strong> <code>{{ block.hash }}</code>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Previous Hash:</strong> <code>{{ block.previous_hash }}</code>
+                        </div>
+                    </div>
+                    
+                    <h5>Transactions</h5>
+                    {% if block.transactions %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Amount</th>
+                                        <th>Transaction ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tx in block.transactions %}
+                                        <tr>
+                                            <td>
+                                                {% if tx.transaction_type == 'donation' %}
+                                                    <span class="badge bg-primary">Donation</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark">Spending</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if tx.transaction_type == 'donation' %}
+                                                    User #{{ tx.sender_id }}
+                                                {% else %}
+                                                    {% if tx.sender_name is defined %}
+                                                        {{ tx.sender_name }}
+                                                    {% else %}
+                                                        {{ tx.sender_id|truncate(10) }}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if tx.transaction_type == 'donation' %}
+                                                    {% if tx.recipient_name is defined %}
+                                                        {{ tx.recipient_name }}
+                                                    {% else %}
+                                                        {{ tx.recipient_id|truncate(10) }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ tx.recipient_id }} <!-- Purpose/description for spending -->
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ tx.amount }} SIM</td>
+                                            <td><code>{{ tx.id|truncate(10) }}</code></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No transactions in this block.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if not blocks %}
+    <div class="alert alert-info">
+        No blocks in the blockchain yet. Transactions will appear here once they are processed.
+    </div>
+{% endif %}
+{% endblock %} 

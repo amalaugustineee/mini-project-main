@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Record Expenditure - {{ charity.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('charity_auth.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Record Expenditure</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0"><i class="bi bi-receipt-cutoff me-2"></i> Record Expenditure</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="bi bi-info-circle-fill display-6"></i>
+                            </div>
+                            <div>
+                                <h5 class="alert-heading">Transparency Note</h5>
+                                <p class="mb-0">As a charity, you are responsible for recording your own expenditures. All expenditures are permanently recorded on the blockchain and will be visible to your donors through their profiles and the blockchain explorer. This promotes transparency and trust in how donations are utilized.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>Available Balance:</h5>
+                            <span class="badge bg-success fs-5">{{ available_balance }} SIM Tokens</span>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('charity_auth.spend_funds') }}">
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount (SIM Tokens)</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control" id="amount" name="amount" required>
+                            <div class="form-text">Enter the amount you are spending.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="purpose" class="form-label">Purpose</label>
+                            <input type="text" class="form-control" id="purpose" name="purpose" required>
+                            <div class="form-text">Describe what this expenditure is for (e.g., "Office Supplies", "Staff Salaries", "Community Outreach").</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="recipient" class="form-label">Recipient</label>
+                            <input type="text" class="form-control" id="recipient" name="recipient" required>
+                            <div class="form-text">Who is receiving this payment? (e.g., "Office Depot", "John Smith", "Utility Company").</div>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <h5 class="alert-heading">Important</h5>
+                            <p class="mb-0">Once recorded, this expenditure cannot be modified or deleted as it will be permanently stored on the blockchain. Please ensure all details are correct before submitting.</p>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-2"></i> Record Expenditure
+                            </button>
+                            <a href="{{ url_for('charity_auth.dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Charities - Charity Chain{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <header class="pb-3 mb-4 border-bottom">
+        <h1 class="display-5 fw-bold">Our Charities</h1>
+        <p class="lead">Browse our curated list of verified charitable organizations. Your donations go directly to those in need, with full transparency through blockchain technology.</p>
+    </header>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><span class="badge bg-info rounded-pill">{{ charities|length }}</span> approved charities available</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="btn-group" role="group" aria-label="Sort options">
+                <a href="{{ url_for('charity.charities_list', sort='name') }}" class="btn btn-outline-primary {% if current_sort != 'donations' %}active{% endif %}">
+                    <i class="bi bi-sort-alpha-down"></i> Sort by Name
+                </a>
+                <a href="{{ url_for('charity.charities_list', sort='donations') }}" class="btn btn-outline-primary {% if current_sort == 'donations' %}active{% endif %}">
+                    <i class="bi bi-sort-numeric-down"></i> Sort by Donations
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 py-3">
+        {% if charities %}
+            {% for charity in charities %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">{{ charity.name }}</h5>
+                                <span class="badge bg-success rounded-pill">{{ charity.total_received }} SIM</span>
+                            </div>
+                            <div class="card-text mb-3">{{ charity.description|truncate(150) }}</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{{ url_for('charity.charity_detail', charity_id=charity.id) }}" class="btn btn-primary">View Details</a>
+                                {% if current_user.is_authenticated %}
+                                    <a href="{{ url_for('charity.donate', charity_id=charity.id) }}" class="btn btn-outline-success">Donate</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-muted">
+                                {% if charity.blockchain_address %}
+                                    Address: <code>{{ charity.blockchain_address|truncate(20) }}</code>
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No approved charities available at the moment. Please check back soon.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if not current_user.is_authenticated %}
+    <div class="alert alert-secondary mt-4">
+        <h5>Want to make a donation?</h5>
+        <p>You need to <a href="{{ url_for('auth.login') }}">log in</a> or <a href="{{ url_for('auth.register') }}">register</a> to donate to these worthy causes.</p>
+    </div>
+    {% endif %}
+
+    <div class="card mt-4 border-success">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-building me-2"></i> Are you a charitable organization?</h5>
+        </div>
+        <div class="card-body">
+            <p>Join our transparent donation platform and connect with donors who care about making a difference.</p>
+            <div class="row">
+                <div class="col-md-8">
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><i class="bi bi-check-circle-fill text-success me-2"></i> Secure blockchain-based donation tracking</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle-fill text-success me-2"></i> Transparent spending dashboard for donors</li>
+                        <li class="list-group-item"><i class="bi bi-check-circle-fill text-success me-2"></i> Simple fund management tools</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                    <a href="{{ url_for('charity_auth.register') }}" class="btn btn-lg btn-success">Register Your Charity</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
