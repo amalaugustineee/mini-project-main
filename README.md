@@ -11,6 +11,28 @@ A blockchain-based platform for transparent charitable donations and spending tr
 - Admin dashboard for charity management
 - Real-time blockchain explorer
 
+## Screenshots
+
+### Charity Dashboard
+![Charity Dashboard](screenshots/charity_dashboard.png)
+*The charity dashboard showing donation stats, spending history, and donor information.*
+
+### Blockchain Explorer
+![Blockchain Explorer](screenshots/blockchain_explorer.png)
+*The blockchain explorer showing all transactions recorded on the blockchain.*
+
+### Admin Charity Review
+![Admin Charity Review](screenshots/charity_review.png)
+*Admin interface for reviewing and approving charity applications.*
+
+### Home Page
+![Home Page](screenshots/home_page.png)
+*The home page showing featured charities and how the platform works.*
+
+### Donation Interface
+![Donation Interface](screenshots/donation_interface.png)
+*Interface for users to make donations to charities.*
+
 ## Tech Stack
 
 - Python 3.x
@@ -86,3 +108,4 @@ charity-chain/
 
 This project is licensed under the MIT License - see the LICENSE file for details. 
 This is a simulation for educational purposes only. No real cryptocurrencies or funds are involved. 
+
